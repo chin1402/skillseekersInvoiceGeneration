@@ -54,7 +54,7 @@ public class ExcelHelper {
                     Cell currentCell = cellsInRow.next();
                     switch (cellIdx) {
                         case 0:
-                            rowData.setStudentName(currentCell.getStringCellValue());
+                            rowData.setStudentName(currentCell.getStringCellValue().toUpperCase());
                             break;
                         case 1:
                             rowData.setDate(new SimpleDateFormat("dd-MMMM-yyyy", Locale.ENGLISH).format(currentCell.getDateCellValue()));
@@ -80,7 +80,7 @@ public class ExcelHelper {
                             rowData.setSubject(currentCell.getStringCellValue());
                             break;
                         case 6:
-                            rowData.setParentName(currentCell.getStringCellValue());
+                            rowData.setParentName(currentCell.getStringCellValue().toUpperCase());
                             break;
                         case 7:
                             rowData.setSecurityApplicable(currentCell.getStringCellValue());

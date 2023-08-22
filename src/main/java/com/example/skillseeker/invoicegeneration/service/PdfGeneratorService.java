@@ -228,11 +228,10 @@ public class PdfGeneratorService {
         table.addCell(c1);
 
         studentData.forEach(data -> {
-            float price = Float.parseFloat(data.getPrice());
+            float price = Float.parseFloat(data.getPrice()) / Float.parseFloat(data.getDuration());
             float duration = Float.parseFloat(data.getDuration());
             if(amountDetailsForStudent.containsKey(data.getSubject())){
                 AmountDetails details = amountDetailsForStudent.get(data.getSubject());
-                details.setPrice(price);
                 details.setTotalHours(duration + details.getTotalHours());
             } else {
                 amountDetailsForStudent.put(data.getSubject(), new AmountDetails(price, duration));
