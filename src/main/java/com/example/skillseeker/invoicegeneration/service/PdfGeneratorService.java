@@ -42,6 +42,9 @@ public class PdfGeneratorService {
             Font.BOLD, new BaseColor(153,76,0,0));
     private static final Font studentNameFont = new Font(Font.FontFamily.TIMES_ROMAN, 12,
             Font.BOLD, new BaseColor(0, 153, 76, 0));
+
+    private static final Font grandTotalFont = new Font(Font.FontFamily.TIMES_ROMAN, 18,
+            Font.BOLD, new BaseColor(0, 153, 76, 0));
     private static final Font tableEntriesFont = new Font(Font.FontFamily.TIMES_ROMAN, 10,
             Font.NORMAL, BaseColor.BLACK);
     private static final Font tableHeadingFont = new Font(Font.FontFamily.TIMES_ROMAN, 10,
@@ -109,9 +112,11 @@ public class PdfGeneratorService {
         }
 
         addEmptyLine(preface, 1);
-        preface.add(new Paragraph(
-                String.format(Constants.COL_GRAND_TOTAL, grandTotalForParent), studentNameFont)
-        );
+        Paragraph grandTotalPara = new Paragraph(
+                String.format(Constants.COL_GRAND_TOTAL, grandTotalForParent), grandTotalFont);
+        grandTotalPara.setAlignment(Element.ALIGN_RIGHT);
+        preface.add(grandTotalPara);
+
         addEmptyLine(preface, 1);
 
         if(securityAmountApplicable) {
