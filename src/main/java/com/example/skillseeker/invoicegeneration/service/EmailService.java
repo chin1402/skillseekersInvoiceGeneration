@@ -46,8 +46,8 @@ public class EmailService {
     }
 
     public void sendEmail(InvoiceHeaderData invoiceData){
-        final String username = "skill4seekers@gmail";
-        final String password = "oyzjmbjjscgbspho";
+        final String username = "skill4seekers@gmail.com";
+        final String password = "jlxjkycgjcndbxkr";
 
         Properties props = new java.util.Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
@@ -58,7 +58,7 @@ public class EmailService {
         Session session = Session.getInstance(props,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication("", "");
+                        return new PasswordAuthentication(username, password);
                     }
                 });
 
@@ -87,7 +87,6 @@ public class EmailService {
             msg.setContent(multipart);
 
             sendInvoiceAndUpdateStatus(msg, invoiceData);
-            log.info("Email sent successful to Email: " + invoiceData.getEmail());
         } catch (MessagingException | IOException e) {
             e.printStackTrace();
         }
