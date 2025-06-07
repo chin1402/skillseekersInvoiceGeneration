@@ -1,16 +1,13 @@
 package com.example.skillseeker.invoicegeneration.helper;
 
+import com.example.skillseeker.invoicegeneration.message.InvoiceHeaderData;
 import com.example.skillseeker.invoicegeneration.message.StudentClassDetails;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -95,8 +92,8 @@ public class ExcelHelper {
                     cellIdx++;
                 }
 
-                if(rowData.getParentName() != null){
-                    if(!invoicesForParent.containsKey(rowData.getParentName())){
+                if (rowData.getParentName() != null) {
+                    if (!invoicesForParent.containsKey(rowData.getParentName())) {
                         Map<String, List<StudentClassDetails>> newChildRecordForParent = new HashMap<>();
                         List<StudentClassDetails> newStudentRecords = new ArrayList<>();
                         newStudentRecords.add(rowData);
@@ -104,7 +101,7 @@ public class ExcelHelper {
                         invoicesForParent.put(rowData.getParentName(), newChildRecordForParent);
                     } else {
                         Map<String, List<StudentClassDetails>> existingChildRecords = invoicesForParent.get(rowData.getParentName());
-                        if(existingChildRecords.containsKey(rowData.getStudentName())){
+                        if (existingChildRecords.containsKey(rowData.getStudentName())) {
                             List<StudentClassDetails> existingRecords = existingChildRecords.get(rowData.getStudentName());
                             existingRecords.add(rowData);
                         } else {
@@ -127,4 +124,63 @@ public class ExcelHelper {
             throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
         }
     }
+
+    public static void updateOutputStatusFile(InvoiceHeaderData invoiceData, String emailStatus)
+            throws IOException {
+        File file = new File("status.xlsx");
+        FileInputStream inputStream = new FileInputStream(file);
+        Workbook workbook = new XSSFWorkbook(inputStream); // Use HSSFWorkbook for .xls
+
+        Sheet sheet = workbook.getSheetAt(0); // Get the first sheet
+        int lastRowNum = sheet.getLastRowNum();
+        Row row = sheet.createRow(lastRowNum + 1); // Create new row at the end
+
+        Cell cell1 = row.createCell(0);
+        cell1.setCellValue(invoiceData.getParentName());
+        Cell cell2 = row.createCell(1);
+        cell2.setCellValue("Yes");
+        Cell cell3 = row.createCell(2);
+        cell3.setCellValue(invoiceData.getEmail());
+        Cell cell4 = row.createCell(3);
+        cell4.setCellValue(emailStatus);
+
+        inputStream.close();
+        FileOutputStream outputStream = new FileOutputStream(file);
+        workbook.write(outputStream);
+        workbook.close();
+        outputStream.close();
+    }
+
+    public static void createOutputStatusFile() {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Status");
+        Font boldFont = workbook.createFont();
+        boldFont.setBold(true);
+
+        // Create a style for the bold column
+        CellStyle boldStyle = workbook.createCellStyle();
+        boldStyle.setFont(boldFont);
+
+        // Sample data
+        String[] header = {"Parent Name", "Invoice Created", "Email", "Email Sent"};
+
+        // Create header row
+        Row headerRow = sheet.createRow(0);
+        for (int i = 0; i < header.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(header[i]);
+            cell.setCellStyle(boldStyle);
+        }
+
+        try {
+            FileOutputStream out = new FileOutputStream(
+                    new File("status.xlsx"));
+            workbook.write(out);
+            out.close();
+            System.out.println("Status Excel file created successfully!");
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot update Status Excel: " + e.getMessage());
+        }
+    }
+
 }

@@ -47,7 +47,7 @@ public class SkillSeekerController {
         if (ExcelHelper.hasExcelFormat(file)) {
             try {
                 fileService.sendInvoices(file);
-                message = "Invoices Email Sent successfully";
+                message = "Process Completed. Please check Status Excel for details.";
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
             } catch (Exception e) {
                 message = "Could not upload the file: " + file.getOriginalFilename() + "!" + "Detail Error: " + e.getMessage();
