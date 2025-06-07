@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * @author I077659
@@ -22,7 +23,7 @@ public class ExcelService {
     public void generateInvoices(MultipartFile file) {
         try {
             Map<String, Map<String, List<StudentClassDetails>>> recordsForEachParent = ExcelHelper.readExcel(file.getInputStream());
-            pdfService.generatePdf(recordsForEachParent);
+            pdfService.generatePdf(new TreeMap<>(recordsForEachParent));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -30,10 +31,12 @@ public class ExcelService {
 
     public void sendInvoices(MultipartFile file) {
         try {
-            Map<String, Map<String, List<StudentClassDetails>>> recordsForEachParent = ExcelHelper.readExcel(file.getInputStream());
-            pdfService.sendPdf(recordsForEachParent);
+            Map<String, Map<String, List<StudentClassDetails>>> recordsForEachParent =
+                    ExcelHelper.readExcel(file.getInputStream());
+            pdfService.sendPdf(new TreeMap<>(recordsForEachParent));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 }

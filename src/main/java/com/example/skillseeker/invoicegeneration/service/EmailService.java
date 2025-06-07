@@ -1,6 +1,7 @@
 package com.example.skillseeker.invoicegeneration.service;
 
 import com.example.skillseeker.invoicegeneration.helper.Constants;
+import com.example.skillseeker.invoicegeneration.helper.ExcelHelper;
 import com.example.skillseeker.invoicegeneration.message.InvoiceHeaderData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import java.io.FileNotFoundException;
+
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -36,8 +38,15 @@ public class EmailService {
             "<br>Regards and thanks,\n</br>" +
             "<br>Kritika Ahuja</br></p>";
 
-    public void sendEmailWithAttachment(InvoiceHeaderData invoiceData){
-        final String username = "skill4seekers@gmail.com";
+    public void sendEmailWithAttachment(InvoiceHeaderData invoiceData, int counter){
+        if (counter == 0){
+            ExcelHelper.createOutputStatusFile();
+        }
+        sendEmail(invoiceData);
+    }
+
+    public void sendEmail(InvoiceHeaderData invoiceData){
+        final String username = "skill4seekers@gmail";
         final String password = "oyzjmbjjscgbspho";
 
         Properties props = new java.util.Properties();
@@ -49,7 +58,7 @@ public class EmailService {
         Session session = Session.getInstance(props,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(username, password);
+                        return new PasswordAuthentication("", "");
                     }
                 });
 
@@ -77,11 +86,21 @@ public class EmailService {
 
             msg.setContent(multipart);
 
-
-            Transport.send(msg);
+            sendInvoiceAndUpdateStatus(msg, invoiceData);
             log.info("Email sent successful to Email: " + invoiceData.getEmail());
-        } catch (MessagingException e) {
+        } catch (MessagingException | IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void sendInvoiceAndUpdateStatus(Message msg, InvoiceHeaderData invoiceData) throws IOException {
+        try {
+            Transport.send(msg);
+            ExcelHelper.updateOutputStatusFile(invoiceData, "Sent");
+            log.info("Email sent successful to Email: " + invoiceData.getEmail());
+        }  catch (Exception e) {
+            ExcelHelper.updateOutputStatusFile(invoiceData, "Failed");
+            log.info("Email Failed for address: " + invoiceData.getEmail());
         }
     }
 }

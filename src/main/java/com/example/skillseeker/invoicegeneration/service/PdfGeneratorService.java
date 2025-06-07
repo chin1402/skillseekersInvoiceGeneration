@@ -302,13 +302,15 @@ public class PdfGeneratorService {
 
     public void sendPdf(Map<String, Map<String, List<StudentClassDetails>>> dataPerParent) {
         String fileName = "";
+        int counter = 0;
         try {
             for(Map.Entry<String, Map<String, List<StudentClassDetails>>> parentDataForEachStudent: dataPerParent.entrySet()){
                 InvoiceHeaderData invoiceHeaderData = getHeaderDataForParent(parentDataForEachStudent);
                 fileName = parentDataForEachStudent.getKey() + " (" + invoiceHeaderData.getMonthOfInvoice() + ")" + ".pdf";
 
                 invoiceHeaderData.setInvoiceFileName(fileName);
-                emailService.sendEmailWithAttachment(invoiceHeaderData);
+                emailService.sendEmailWithAttachment(invoiceHeaderData, counter);
+                counter++;
             }
         } catch (Exception e) {
             log.error("Error: "+ e.getMessage());
