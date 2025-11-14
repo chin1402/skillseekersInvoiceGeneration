@@ -42,11 +42,12 @@ public class SkillSeekerController {
     }
 
     @GetMapping(path = "/send")
-    public ResponseEntity<ResponseMessage> sendInvoices(@RequestParam("file") MultipartFile file){
+    public ResponseEntity<ResponseMessage> sendInvoices(@RequestParam("file") MultipartFile file,
+                                                        @RequestParam("emailOption") String emailOption){
         String message = "";
         if (ExcelHelper.hasExcelFormat(file)) {
             try {
-                fileService.sendInvoices(file);
+                fileService.sendInvoices(file, emailOption);
                 message = "Process Completed. Please check Status Excel for details.";
                 return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
             } catch (Exception e) {

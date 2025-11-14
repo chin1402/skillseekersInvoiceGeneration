@@ -300,7 +300,7 @@ public class PdfGeneratorService {
         return new DecimalFormat("#.00").format(f);
     }
 
-    public void sendPdf(Map<String, Map<String, List<StudentClassDetails>>> dataPerParent) {
+    public void sendPdf(Map<String, Map<String, List<StudentClassDetails>>> dataPerParent, String emailOption) {
         String fileName = "";
         int counter = 0;
         try {
@@ -309,7 +309,7 @@ public class PdfGeneratorService {
                 fileName = parentDataForEachStudent.getKey() + " (" + invoiceHeaderData.getMonthOfInvoice() + ")" + ".pdf";
 
                 invoiceHeaderData.setInvoiceFileName(fileName);
-                emailService.sendEmailWithAttachment(invoiceHeaderData, counter);
+                emailService.sendEmailWithAttachment(invoiceHeaderData, counter, emailOption);
                 counter++;
             }
         } catch (Exception e) {

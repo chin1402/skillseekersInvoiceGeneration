@@ -29,11 +29,11 @@ public class ExcelService {
         }
     }
 
-    public void sendInvoices(MultipartFile file) {
+    public void sendInvoices(MultipartFile file, String emailOption) {
         try {
             Map<String, Map<String, List<StudentClassDetails>>> recordsForEachParent =
                     ExcelHelper.readExcel(file.getInputStream());
-            pdfService.sendPdf(new TreeMap<>(recordsForEachParent));
+            pdfService.sendPdf(new TreeMap<>(recordsForEachParent), emailOption);
         } catch (IOException e) {
             e.printStackTrace();
         }

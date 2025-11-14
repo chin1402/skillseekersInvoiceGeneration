@@ -14,7 +14,7 @@
 	<name>invoice-generation</name>
 	<description>Invoice Generation for Skill Seekers</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>8</java.version>
 	</properties>
 	<dependencies>
 		<dependency>

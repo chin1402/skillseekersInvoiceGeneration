@@ -16,6 +16,8 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -38,16 +40,21 @@ public class EmailService {
             "<br>Regards and thanks,\n</br>" +
             "<br>Kritika Ahuja</br></p>";
 
-    public void sendEmailWithAttachment(InvoiceHeaderData invoiceData, int counter){
+    public void sendEmailWithAttachment(InvoiceHeaderData invoiceData, int counter, String emailOption){
         if (counter == 0){
             ExcelHelper.createOutputStatusFile();
         }
-        sendEmail(invoiceData);
+        sendEmail(invoiceData, emailOption);
     }
 
-    public void sendEmail(InvoiceHeaderData invoiceData){
-        final String username = "skill4seekers@gmail.com";
-        final String password = "jlxjkycgjcndbxkr";
+    public void sendEmail(InvoiceHeaderData invoiceData, String emailOption){
+        Map<String, String> emailMap = new HashMap<>();
+        emailMap.put("1", "skill4seekers@gmail.com");
+        emailMap.put("2", "skillseekers.info@gmail.com");
+
+        Map<String, String> passwordMap = new HashMap<>();
+        passwordMap.put("1","jlxjkycgjcndbxkr");
+        passwordMap.put("2","ssisxqzzyroimjtv");
 
         Properties props = new java.util.Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
@@ -58,14 +65,14 @@ public class EmailService {
         Session session = Session.getInstance(props,
                 new javax.mail.Authenticator() {
                     protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(username, password);
+                        return new PasswordAuthentication(emailMap.get(emailOption), passwordMap.get(emailOption));
                     }
                 });
 
         Message msg = new MimeMessage(session);
         try {
-            log.info("Triggering invoice Email to: " + invoiceData.getEmail());
-            msg.setFrom(new InternetAddress("skill4seekers@gmail.com"));
+            log.info("Source Email: " + emailMap.get(emailOption) + ". Triggering invoice Email to: " + invoiceData.getEmail());
+            msg.setFrom(new InternetAddress(emailMap.get(emailOption)));
             msg.setRecipient(Message.RecipientType.TO, new InternetAddress(invoiceData.getEmail()));
             msg.setSubject(String.format(Constants.INVOICE_HEADING, invoiceData.getMonthOfInvoice()));
 
