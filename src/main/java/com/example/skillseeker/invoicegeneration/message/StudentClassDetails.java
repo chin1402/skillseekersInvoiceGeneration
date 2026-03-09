@@ -5,6 +5,7 @@ package com.example.skillseeker.invoicegeneration.message;
  */
 public class StudentClassDetails {
 
+    private String rollNumber;
     private String studentName;
     private String date;
     private String topic;
@@ -15,6 +16,14 @@ public class StudentClassDetails {
     private String email;
     private String securityApplicable;
     private String monthOfInvoice;
+
+    public String getRollNumber() {
+        return rollNumber;
+    }
+
+    public void setRollNumber(String rollNumber) {
+        this.rollNumber = rollNumber;
+    }
 
     public String getStudentName() {
         return studentName;

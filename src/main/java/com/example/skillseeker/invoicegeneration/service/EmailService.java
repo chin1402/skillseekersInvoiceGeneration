@@ -49,12 +49,14 @@ public class EmailService {
 
     public void sendEmail(InvoiceHeaderData invoiceData, String emailOption){
         Map<String, String> emailMap = new HashMap<>();
-        emailMap.put("1", "skill4seekers@gmail.com");
-        emailMap.put("2", "skillseekers.info@gmail.com");
+        emailMap.put("1", "admin@skillseekers.co.in");
+        emailMap.put("2", "skill4seekers@gmail.com");
+        emailMap.put("3", "skillseekers.info@gmail.com");
 
         Map<String, String> passwordMap = new HashMap<>();
-        passwordMap.put("1","jlxjkycgjcndbxkr");
-        passwordMap.put("2","ssisxqzzyroimjtv");
+        passwordMap.put("1","ryqrupxaonashwrc");
+        passwordMap.put("2","jlxjkycgjcndbxkr");
+        passwordMap.put("3","ssisxqzzyroimjtv");
 
         Properties props = new java.util.Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");

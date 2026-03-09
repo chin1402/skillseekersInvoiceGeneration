@@ -12,6 +12,15 @@ public class InvoiceHeaderData {
     private String email;
     private String monthOfInvoice;
     private String invoiceFileName;
+    private String rollNumber;
+
+    public String getRollNumber() {
+        return rollNumber;
+    }
+
+    public void setRollNumber(String rollNumber) {
+        this.rollNumber = rollNumber;
+    }
 
     public String getParentName() {
         return parentName;

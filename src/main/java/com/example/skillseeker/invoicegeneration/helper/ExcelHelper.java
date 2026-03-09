@@ -51,38 +51,41 @@ public class ExcelHelper {
                     Cell currentCell = cellsInRow.next();
                     switch (cellIdx) {
                         case 0:
-                            rowData.setStudentName(currentCell.getStringCellValue().toUpperCase());
+                            rowData.setRollNumber(currentCell.getStringCellValue().toUpperCase());
                             break;
                         case 1:
+                            rowData.setStudentName(currentCell.getStringCellValue().toUpperCase());
+                            break;
+                        case 2:
                             rowData.setDate(new SimpleDateFormat("dd-MMMM-yyyy", Locale.ENGLISH).format(currentCell.getDateCellValue()));
                             rowData.setMonthOfInvoice(
                                     new SimpleDateFormat("MMMM").format(currentCell.getDateCellValue()) + ", " +
                                             new SimpleDateFormat("yyyy").format(currentCell.getDateCellValue())
                             );
                             break;
-                        case 2:
+                        case 3:
                             rowData.setTopic(currentCell.getStringCellValue());
                             break;
-                        case 3:
+                        case 4:
                             rowData.setPrice(String.valueOf(
                                     currentCell.getNumericCellValue())
                             );
                             break;
-                        case 4:
+                        case 5:
                             rowData.setDuration(String.valueOf(
                                     currentCell.getNumericCellValue())
                             );
                             break;
-                        case 5:
+                        case 6:
                             rowData.setSubject(currentCell.getStringCellValue());
                             break;
-                        case 6:
+                        case 7:
                             rowData.setParentName(currentCell.getStringCellValue().toUpperCase());
                             break;
-                        case 7:
+                        case 8:
                             rowData.setSecurityApplicable(currentCell.getStringCellValue());
                             break;
-                        case 8:
+                        case 9:
                             rowData.setEmail(currentCell.getStringCellValue());
                             break;
                         default:
@@ -92,22 +95,22 @@ public class ExcelHelper {
                     cellIdx++;
                 }
 
-                if (rowData.getParentName() != null) {
-                    if (!invoicesForParent.containsKey(rowData.getParentName())) {
+                if (rowData.getRollNumber() != null) {
+                    if (!invoicesForParent.containsKey(rowData.getRollNumber())) {
                         Map<String, List<StudentClassDetails>> newChildRecordForParent = new HashMap<>();
                         List<StudentClassDetails> newStudentRecords = new ArrayList<>();
                         newStudentRecords.add(rowData);
                         newChildRecordForParent.put(rowData.getStudentName(), newStudentRecords);
-                        invoicesForParent.put(rowData.getParentName(), newChildRecordForParent);
+                        invoicesForParent.put(rowData.getRollNumber(), newChildRecordForParent);
                     } else {
-                        Map<String, List<StudentClassDetails>> existingChildRecords = invoicesForParent.get(rowData.getParentName());
+                        Map<String, List<StudentClassDetails>> existingChildRecords = invoicesForParent.get(rowData.getRollNumber());
                         if (existingChildRecords.containsKey(rowData.getStudentName())) {
                             List<StudentClassDetails> existingRecords = existingChildRecords.get(rowData.getStudentName());
                             existingRecords.add(rowData);
                         } else {
                             List<StudentClassDetails> newStudentRecords = new ArrayList<>();
                             newStudentRecords.add(rowData);
-                            Map<String, List<StudentClassDetails>> ex = invoicesForParent.get(rowData.getParentName());
+                            Map<String, List<StudentClassDetails>> ex = invoicesForParent.get(rowData.getRollNumber());
                             ex.merge(rowData.getStudentName(), newStudentRecords, (oldValue, newValue) -> {
                                 oldValue.add(rowData);
                                 return oldValue;
@@ -138,11 +141,13 @@ public class ExcelHelper {
         Cell cell1 = row.createCell(0);
         cell1.setCellValue(invoiceData.getParentName());
         Cell cell2 = row.createCell(1);
-        cell2.setCellValue("Yes");
+        cell2.setCellValue(invoiceData.getRollNumber());
         Cell cell3 = row.createCell(2);
-        cell3.setCellValue(invoiceData.getEmail());
+        cell3.setCellValue("Yes");
         Cell cell4 = row.createCell(3);
-        cell4.setCellValue(emailStatus);
+        cell4.setCellValue(invoiceData.getEmail());
+        Cell cell5 = row.createCell(4);
+        cell5.setCellValue(emailStatus);
 
         inputStream.close();
         FileOutputStream outputStream = new FileOutputStream(file);
@@ -162,7 +167,7 @@ public class ExcelHelper {
         boldStyle.setFont(boldFont);
 
         // Sample data
-        String[] header = {"Parent Name", "Invoice Created", "Email", "Email Sent"};
+        String[] header = {"Parent Name", "Roll Number", "Invoice Created", "Email", "Email Sent"};
 
         // Create header row
         Row headerRow = sheet.createRow(0);

@@ -97,7 +97,8 @@ public class PdfGeneratorService {
 
         addEmptyLine(preface, 1);
         preface.add(new Paragraph(
-                String.format(Constants.SUB_HEADING_2, parentData.getKey()), parentsNameFont)
+                String.format(Constants.SUB_HEADING_2, parentData.getValue().values()
+                        .stream().findAny().get().get(0).getParentName()), parentsNameFont)
         );
 
         addEmptyLine(preface, 1);
@@ -149,6 +150,7 @@ public class PdfGeneratorService {
         Map<String, List<StudentClassDetails>> studentData = parentData.getValue();
         for(Map.Entry<String, List<StudentClassDetails>> entries: studentData.entrySet()){
             StudentClassDetails studentDetails = entries.getValue().get(0);
+            headerData.setRollNumber(studentDetails.getRollNumber());
             headerData.setParentName(studentDetails.getParentName());
             headerData.setMonthOfInvoice(studentDetails.getMonthOfInvoice());
             headerData.setEmail(studentDetails.getEmail());
